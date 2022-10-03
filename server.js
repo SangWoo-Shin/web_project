@@ -1,8 +1,8 @@
-var express = require("express");
+const express = require("express");
 const path = require('path');
 const app = express();
 
-var HTTP_PORT = process.env.PORT || 8080;
+const HTTP_PORT = process.env.PORT || 8080;
 
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
@@ -11,16 +11,12 @@ function onHttpStart() {
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.redirect("/home");
+   return res.redirect("/home");
 });
 
 app.get('/home', function(req,res) {
     res.sendFile(path.join(__dirname,"/views/home.html"))
   });
-
-  app.get('/', (req, res) => {
-    res.redirect("/about");
-})
 
 app.get('/about', (req,res) => {
     res.sendFile(path.join(__dirname,"/views/about.html"))
