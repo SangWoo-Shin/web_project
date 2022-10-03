@@ -33,7 +33,7 @@ module.exports.getAllEmployees = function () {
 module.exports.getManagers = function () {
     return new Promise((resolve, reject) => {
        if(employees.length > 0) {
-            resolve(employees.filter(employee => employee.isManagerg));
+            resolve(employees.filter(employee => employee.isManager));
        } else {
             reject("no results returned");
        }
