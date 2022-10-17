@@ -10,7 +10,7 @@ module.exports.initialize = function () {
                 if(err) {
                     reject(err);
                 } else {
-                    employees = JSON.parse(data);
+                    posts = JSON.parse(data);
 
                 fs.readFile("./data/categories.json", 'utf8', (err, data) => {
                     if(err) {

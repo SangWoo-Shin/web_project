@@ -33,24 +33,16 @@ app.get('/posts/add', (req,res) => {
     res.sendFile(path.join(__dirname, "./views/addPost.html"))
 })
 
-app.get('/employees', (req, res) => {
-    dataService.getAllEmployees().then((data => {
+app.get('/posts', (req, res) => {
+    blogService.getAllPosts().then((data => {
         res.json(data);
     })).catch(err => {
         res.status(404).end();
     });
 });
 
-app.get('/managers', (req, res) => {
-   dataService.getManagers().then((data => {
-        res.json(data);
-    })).catch(err => {
-        res.status(404).end();
-    });
-});
-
-app.get('/departments', (req, res) => {
-    dataService.getDepartments().then((data => {
+app.get('/categories', (req, res) => {
+    blogService.getCategories().then((data => {
         res.json(data);
     })).catch(err => {
         res.status(404).end();
@@ -58,35 +50,48 @@ app.get('/departments', (req, res) => {
 });
 
 app.post("/posts/add", upload.single("featureImage"), (req,res,next) => {
-    let streamUpload = (req) => {
-        return new Promise((resolve, reject) => {
-            let stream = cloudinary.uploader.upload_stream(
-                (error, result) => {
-                    if (result) {
-                        resolve(result);
-                    } else {
-                        reject(error);
+    if(req.file){
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream(
+                    (error, result) => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(error);
+                        }
                     }
-                }
-            );
-            streamifier.createReadStream(req.file.buffer).pipe(stream);
+                );
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+            });
+        };  
+        async function upload(req) {
+            let result = await streamUpload(req);
+            console.log(result);
+            return result;
+        }   
+        upload(req).then((uploaded)=>{
+            processPost(uploaded.url);
         });
-    };  
-    async function upload(req) {
-        let result = await streamUpload(req);
-        console.log(result);
-        return result;
-    }   
-    upload(req).then((uploaded)=>{
-        req.body.featureImage = uploaded.url;
-    
-        // TODO: Process the req.body and add it as a new Blog Post before redirecting to /posts
-    
-    });
-})
+    }else{
+    processPost("");
+    }
+
+    function processPost(imageUrl) {
+        req.body.featureImage = imageUrl;
+
+        blogService.addPost(req.body).then(post => {
+            res.redirect("/posts")
+        }).catch(err => {
+            res.status(500).send(err);
+        })
+    }
+});
+
+
     
 
-dataService.initialize().then(() => {
+blogService.initialize().then(() => {
     app.listen(HTTP_PORT, () => {
         console.log("Express http server listening on: " + HTTP_PORT);
     });
