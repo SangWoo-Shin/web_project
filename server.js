@@ -18,11 +18,11 @@ const HTTP_PORT = process.env.PORT || 8080;
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-   return res.redirect("/home");
+   return res.redirect("/blog");
 });
 
-app.get('/home', function(req,res) {
-    res.sendFile(path.join(__dirname, "./views/home.html"))
+app.get('/blog', function(req,res) {
+    res.sendFile(path.join(__dirname, "./views/blog.html"))
   });
 
 app.get('/about', (req,res) => {
