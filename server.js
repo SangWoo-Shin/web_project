@@ -26,7 +26,7 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/blog', (req,res)=>{
-    blogData.getPublishedPosts().then((data=>{
+    blogService.getPublishedPosts().then((data=>{
         res.json(data);
     })).catch(err=>{
         res.json({message: err});
