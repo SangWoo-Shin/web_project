@@ -74,7 +74,7 @@ app.post("/posts/add", upload.single("featureImage"), (req,res,next) => {
             processPost(uploaded.url);
         });
     }else{
-    processPost("");
+         processPost("");
     }
 
     function processPost(imageUrl) {

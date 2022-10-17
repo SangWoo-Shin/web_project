@@ -31,16 +31,6 @@ module.exports.getAllPosts = function () {
     });
 }
 
-/*module.exports.getManagers = function () {
-    return new Promise((resolve, reject) => {
-       if(posts.length > 0) {
-            resolve(employees.filter(employee => employee.isManager));
-       } else {
-            reject("no results returned");
-       }
-    });
-}*/
-
 module.exports.getCategories = function () {
     return new Promise((resolve, reject) => {
         (categories.length > 0) ? resolve(categories) : reject("no results returned");        
@@ -57,7 +47,7 @@ module.exports.addPost = function(postData) {
             reject("no results");
         }
         else{
-            resolve(posts);
+            resolve();
         }
     });
 }
