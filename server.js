@@ -18,20 +18,20 @@ const HTTP_PORT = process.env.PORT || 8080;
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-   return res.redirect("/blog");
+    res.redirect("/about");
 });
 
-app.get('/blog', function(req,res) {
-    res.sendFile(path.join(__dirname, "./views/blog.html"))
-  });
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, "/views/about.html"))
+});
 
-app.get('/about', (req,res) => {
-    res.sendFile(path.join(__dirname, "./views/about.html"))
-  });
-
-app.get('/posts/add', (req,res) => {
-    res.sendFile(path.join(__dirname, "./views/addPost.html"))
-})
+app.get('/blog', (req,res)=>{
+    blogData.getPublishedPosts().then((data=>{
+        res.json(data);
+    })).catch(err=>{
+        res.json({message: err});
+    });
+});
 
 app.get('/posts', (req,res)=>{   
     let queryPromise = null;
@@ -57,6 +57,10 @@ app.get('/categories', (req, res) => {
         res.status(404).end();
     });
 });
+
+app.get('/posts/add', (req,res) => {
+    res.sendFile(path.join(__dirname, "./views/addPost.html"))
+})
 
 app.post("/posts/add", upload.single("featureImage"), (req,res,next) => {
     if(req.file){
