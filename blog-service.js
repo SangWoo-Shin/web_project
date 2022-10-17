@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { resolve } = require("path");
 
 let posts = [];
 let categories = [];
@@ -37,6 +36,12 @@ module.exports.getCategories = function () {
     });
 }
 
+module.exports.getPublishedPosts = function(){
+    return new Promise((resolve,reject)=>{
+        (posts.length > 0) ? resolve(posts.filter(post => post.published)) : reject("no results returned");
+    });
+}
+
 module.exports.addPost = function(postData) {
     postData.published == undefined ? postData.published = false : postData.published = true;
     postData.id = posts.length + 1;
@@ -54,7 +59,7 @@ module.exports.addPost = function(postData) {
 
 module.exports.getPostsByCategory = function(category) {
     return new Promise((resolve, reject) => {
-        var post_category = posts.filter(posts => posts.category >= 1 && posts.category <= 5);
+        var post_category = posts.filter(post => post.category == category);
         if(post_category.length == 0)
         {
             reject("no results");
@@ -65,7 +70,7 @@ module.exports.getPostsByCategory = function(category) {
 
 module.exports.getPostsByMinDate = function(minDateStr) {
     return new Promise((resolve, reject) => {
-       var post_date = posts.filter(posts => new Date(somePostObj.postDate) >= new Date(minDateStr));
+       var post_date = posts.filter(post => new Date(post.postDate) >= new Date(minDateStr));
        if(post_date.length == 0) {
         reject("no results");
        }
@@ -75,7 +80,7 @@ module.exports.getPostsByMinDate = function(minDateStr) {
 
 module.exports.getPostById = function(id) {
     return new Promise((resolve, reject) => {
-        var post_id = posts.filter(posts => id == posts.id);
+        var post_id = posts.filter(post => id == post.id);
         if(post_id.length == 0)
         {
             reject("no results");
