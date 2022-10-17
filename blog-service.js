@@ -47,7 +47,7 @@ module.exports.addPost = function(postData) {
             reject("no results");
         }
         else{
-            resolve();
+            resolve(posts);
         }
     });
 }

@@ -88,7 +88,25 @@ app.post("/posts/add", upload.single("featureImage"), (req,res,next) => {
     }
 });
 
+app.get('/post/:id', (req,res)=>{
+    blogData.getPostById(req.params.id).then(data=>{
+        res.json(data);
+    }).catch(err=>{
+        res.json({message: err});
+    });
+});
 
+app.get('/minDate', (req,res)=>{
+    blogData.getPostsByMinDate().then((data=>{
+        res.json(data);
+    })).catch(err=>{
+        res.json({message: err});
+    });
+});
+
+app.use((req,res)=>{
+    res.status(404).send("404 - Page Not Found")
+})
     
 
 blogService.initialize().then(() => {
