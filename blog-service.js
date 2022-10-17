@@ -47,7 +47,7 @@ module.exports.getCategories = function () {
     });
 }
 
-module.exports.addPost(postData) = function () {
+module.exports.addPost = function(postData) {
     postData.published == undefined ? postData.published = false : postData.published = true;
     postData.id = posts.length + 1;
     posts.push(postData);
@@ -62,7 +62,7 @@ module.exports.addPost(postData) = function () {
     });
 }
 
-module.exports.getPostsByCategory(category) = function() {
+module.exports.getPostsByCategory = function(category) {
     return new Promise((resolve, reject) => {
         var post_category = posts.filter(posts => posts.category >= 1 && posts.category <= 5);
         if(post_category.length == 0)
@@ -73,7 +73,7 @@ module.exports.getPostsByCategory(category) = function() {
     })
 }
 
-module.exports.getPostsByMinDate(minDateStr) = function() {
+module.exports.getPostsByMinDate = function(minDateStr) {
     return new Promise((resolve, reject) => {
        var post_date = posts.filter(posts => new Date(somePostObj.postDate) >= new Date(minDateStr));
        if(post_date.length == 0) {
@@ -83,7 +83,7 @@ module.exports.getPostsByMinDate(minDateStr) = function() {
     })  
 }
 
-module.exports.getPostById(id) = function() {
+module.exports.getPostById = function(id) {
     return new Promise((resolve, reject) => {
         var post_id = posts.filter(posts => id == posts.id);
         if(post_id.length == 0)

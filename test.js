@@ -8,7 +8,7 @@ function messageDelay(message, ms) {
 }
 
 messageDelay("WEB", 2000).then(function(){
-    console.log("\n");
+
     console.log("322");
 });
 
