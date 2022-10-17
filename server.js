@@ -36,11 +36,11 @@ app.get('/posts/add', (req,res) => {
 app.get('/posts', (req,res)=>{   
     let queryPromise = null;
     if(req.query.category){
-        queryPromise = blogData.getPostsByCategory(req.query.category);
+        queryPromise = blogService.getPostsByCategory(req.query.category);
     }else if(req.query.minDate){
-        queryPromise = blogData.getPostsByMinDate(req.query.minDate);
+        queryPromise = blogService.getPostsByMinDate(req.query.minDate);
     }else{
-        queryPromise = blogData.getAllPosts()
+        queryPromise = blogService.getAllPosts()
     } 
 
     queryPromise.then(data=>{
