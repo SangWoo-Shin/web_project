@@ -45,6 +45,15 @@ module.exports.getPublishedPosts = function(){
 module.exports.addPost = function(postData) {
     postData.published == undefined ? postData.published = false : postData.published = true;
     postData.id = posts.length + 1;
+    postData.postDate = new Date(),
+     month = (postData.postDate.getMonth() + 1),
+     day = postData.postDate.getDate(),
+     year = postData.postDate.getFullYear();
+    if(month.length < 2)
+        month = '0' + month;
+    if(day.length < 2)
+        day = '0' + day;
+    postData.postDate = [year, month, day].join('-');
     posts.push(postData);
 
     return new Promise((resolve, reject) => {
@@ -85,6 +94,17 @@ module.exports.getPostById = function(id) {
         {
             reject("no results");
         }
-        resolve(post_id);
+        resolve(post_id[0]);
+    })
+}
+
+module.exports.getPublishedPostsByCategory = function(category) {
+    return new Promise((resolve, reject) => {
+        var pub_post = posts.filter(post => post.published == true && post.category == category);
+        if(pub_post.length == 0)
+        {
+            reject("no results");
+        }
+        resolve(pub_post);
     })
 }
