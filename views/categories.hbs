@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h2>Categories</h2>
+        <h2>Categories<a href="/categories/add" class="btn btn-success pull-right">Add Category</a></h2>
         <hr />
         <div class="responsive-table">
         <table class="table">
@@ -8,12 +8,14 @@
                 <tr>
                     <th>Category ID</th>
                     <th>Category Name</th>
+                    <th></th>
                 </tr>
             </thead>
             {{#each categories}}
             <tbody>
                 <td><a href="/posts?category={{this.id}}">{{this.id}}</a></td>
                 <td><a href="/posts?category={{this.id}}">{{this.category}}</a></td>
+                <td><a class="btn btn-danger" href="/categories/delete/{{this.id}}">remove</a></td>
             {{/each}}
             </tbody>
         </table>

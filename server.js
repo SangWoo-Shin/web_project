@@ -1,12 +1,12 @@
 /*********************************************************************************
-*  WEB322 – Assignment 04
+*  WEB322 – Assignment 05
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part 
 *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: ________Sangwoo Shin________ Student ID: __119294213__ Date: __2022-10-30___
+*  Name: _____Sangwoo Shin_____ Student ID: __119294213__ Date: __2022-11-22___
 *
-*  Online (Heroku) Link: ________________________________________________________
+*  Online (Heroku) Link: _____https://web322-asst4.herokuapp.com/______
 *
 ********************************************************************************/ 
 
@@ -28,6 +28,8 @@ cloudinary.config({
     secure: true
 });
 const upload = multer();
+
+app.use(express.urlencoded({extended: true}));
 
 app.use(function(req,res,next){
     let route = req.path.substring(1);
@@ -56,7 +58,14 @@ app.engine('.hbs', exphbs.engine({
         },
         safeHTML: function(context){
             return stripJs(context);
+        },
+        formatDate: function(dateObj){
+            let year = dateObj.getFullYear();
+            let month = (dateObj.getMonth() + 1).toString();
+            let day = dateObj.getDate().toString();
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`;
         }
+        
     }
 }));
 
@@ -145,24 +154,37 @@ app.get('/posts', (req,res)=>{
     }else{
         queryPromise = blogService.getAllPosts()
     } 
-
     queryPromise.then(data=>{
-        res.render("posts", {posts: data});
-    }).catch(err=>{
+    (data.length > 0) ? res.render("posts", {posts: data}) : res.render("posts", {message: "no results"});
+    }).catch(err => {
         res.render("posts", {message: "no results"});
     })
 });
 
 app.get('/categories', (req, res) => {
     blogService.getCategories().then((data => {
-        res.render("categories", {categories: data});
-    })).catch(err => {
-        res.render("categories", {message: "no results"});
-    });
+    (data.length > 0) ? res.render("categories", {categories: data}) : res.render("categories", {message: "no results"});
+        })).catch(err => {
+            res.render("categories", {message: "no results"});
+        });
+});
+
+app.get('/categories/add', (req,res) => {
+    res.render("addCategory");
+})
+
+app.post("/categories/add", (req,res,next) => {
+    blogData.addCategory(req.body).then(category => {
+        res.redirect("/categories");
+    }).catch(err=>{
+        res.status(500).send(err.message);
+    })
 });
 
 app.get('/posts/add', (req,res) => {
-    res.render(path.join(__dirname + "/views/addPost.hbs"));
+    blogService.getCategories()
+    .then(data => res.render("addPost", {categories: data}))
+    .catch(err => res.render("addPost", {categories: []}));
 })
 
 app.post("/posts/add", upload.single("featureImage"), (req,res,next) => {
@@ -219,6 +241,18 @@ app.get('/minDate', (req,res)=>{
         res.json({message: err});
     });
 });
+
+app.get('/categories/delete/:id', (req, res) => {
+    blogService.deleteCategoryById(req.params.id)
+    .then(res.redirect("/categories"))
+    .catch(err => res.status(500).send("Unable to Remove Category / Category not found"))
+})
+
+app.get('/posts/delete/:id', (req, res) => {
+    blogService.deletePostById(req.params.id)
+    .then(res.redirect("/posts"))
+    .catch(err => res.status(500).send("Unable to Remove Post / Post not found"))
+})
 
 app.use((req,res)=>{
     res.status(404).render(path.join(__dirname + "/views/404.hbs"));

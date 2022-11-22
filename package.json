@@ -1,5 +1,5 @@
 {
-  "name": "web322-app",
+  "name": "web322",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -16,12 +16,15 @@
     "lodash": "^4.17.21",
     "multer": "^1.4.5-lts.1",
     "npm": "^8.19.2",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
     "sanitize-html": "^2.7.3",
+    "sequelize": "^6.11.0",
     "streamifier": "^0.1.1",
     "strip-js": "^1.2.0"
   },
-  "description": "",
   "devDependencies": {
     "@types/sanitize-html": "^2.6.2"
-  }
+  },
+  "description": ""
 }
